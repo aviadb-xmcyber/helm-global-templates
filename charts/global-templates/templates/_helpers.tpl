@@ -58,12 +58,15 @@ Author: Devops Infra Team
 {{- else if $container.imageKey }}
   {{- $imgConf := get $images $container.imageKey -}}
   {{- if not $imgConf }}
-    {{- fail (printf "Image with key '%s' not found" $container.imageKey $images) -}}
+    {{- fail (printf "Image with key '%s' not found" $container.imageKey) -}}
   {{- end -}}
   {{- if not $imgConf.repository }}
     {{- fail (printf "Image repository must be provided for key '%s'" $container.imageKey) -}}
   {{- end -}}
-  {{- $_ := set $image "registry" $registry -}}
+  {{- if and (not $imgConf.registry) (not $registry) }}
+    {{- fail (printf "Registry must be provided either in the image configuration for key '%s' or globally using 'global.registry'" $container.imageKey) -}}
+  {{- end -}}
+  {{- $_ := set $image "registry" (default $registry $imgConf.registry) -}}
   {{- $_ := set $image "repository" $imgConf.repository -}}
   {{- $_ := set $image "tag" (or $imgConf.tag "") -}}
   {{- $_ := set $image "sha" (or $imgConf.sha "") -}}
