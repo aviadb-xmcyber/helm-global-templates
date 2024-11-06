@@ -23,7 +23,7 @@ Author: Devops Infra Team
 {{- end }}
 
 {{- range $envArray }}
-{{- $renderedValue := include "helpers.renderGlobalIfExists" (dict "value" .value "global" $global) }}
+{{- $renderedValue := include "helpers.renderGlobalIfExists" (dict "value" (.value | quote) "global" $global) }}
 - name: {{ .name }}
   value: {{ $renderedValue }}
 {{- end }}
