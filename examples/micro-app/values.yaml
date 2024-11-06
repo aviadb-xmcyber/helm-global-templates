@@ -1,0 +1,33 @@
+api_port: &api_port 3000
+api_namespace: &api_namespace api-namespace
+api_configmap_name: &api_configmap_name api-cm
+
+deployments:
+  - name: api
+    namespace: *api_namespace
+    replicas: 1
+    containers:
+      - name: api-container
+        image:
+          registry: docker.io
+          repository: busybox
+          tag: 1.0.0
+        ports:
+          - containerPort: *api_port
+        envFrom:
+          - configMapRef:
+              name: *api_configmap_name
+
+services:
+  - name: api
+    namespace: *api_namespace
+    ports:
+      - port: *api_port
+        targetPort: *api_port
+        protocol: TCP
+
+configmaps:
+  - name: *api_configmap_name
+    namespace: *api_namespace
+    data:
+      key: value
