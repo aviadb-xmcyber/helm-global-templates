@@ -2,5 +2,4 @@
 
 ## Advanced Usage
 
-[Image Directory](docs/image-directory.md)
-[Dynamic Values Rendering](docs/dynamic-values-rendering.md)
+[Image Directory](https://github.com/XMCyber/helm-global-templates/blob/master/docs/image-directory.md)

@@ -41,8 +41,6 @@ deployments:
 
 ### Why use this pattern?
 
-### Why use this pattern?
-
 - **Simplicity**: Without this pattern you would need to override the image in each deployment, in each chart, good luck with that.
 - **Continuous Deployment (CD)**: When using an ArgoCD or FluxCD, you can point to a single values file that contains all the images, and then update the images in a single place.
 - **Override YAML anchors**: You can't override YAML anchors ([See issue](https://github.com/helm/helm/issues/2336#issuecomment-297839969)). This pattern allows a nice workaround for this issue.
