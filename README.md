@@ -76,3 +76,7 @@ configmaps:
     data:
       key: value
 ```
+
+## Advanced Usage
+
+For advanced usage, tips and tricks, please refer to the [docs folder](docs).
