@@ -4,7 +4,7 @@ Author: Devops Infra Team
 */}}
 
 {{/*
-  Render an array of env variables. The input can be a map or a slice.
+  Render an array of env variables, the input can be a map or a slice.
   Usage: 
     {{- include "helpers.toEnvArray" (dict "container" . "global" $global_values "context" $) }}
 */}}
