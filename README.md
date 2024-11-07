@@ -77,6 +77,6 @@ configmaps:
       key: value
 ```
 
-## Advanced Usage
+## Documentation
 
-For advanced usage, tips and tricks, please refer to the [docs folder](docs).
+For detailed documentation on the available resources and advanced usage, please refer to the [docs folder](docs).
