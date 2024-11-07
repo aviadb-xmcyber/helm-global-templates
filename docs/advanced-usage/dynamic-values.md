@@ -8,7 +8,7 @@ We solved this problem by using a `dynamic-values`, basically a utilily function
 
 ### Usage
 
-The syntax for injecting a global value is `^^global.<key>^^`.
+The syntax for injecting a global value is `{{global.<key>}}`.
 
 > Note: You can't use dynamic-values in any resource, here is a list of properties and resources that support dynamic-values:
 >
@@ -43,7 +43,7 @@ deployments:
           - containerPort: 8080
         env:
           - name: INJECTED_WORD
-            value: "This is going to be ^^global.key^^ here"
+            value: "This is going to be {{global.key}} here"
 ```
 
 In the example above, the value of `INJECTED_WORD` will be `This is going to be injected here`.

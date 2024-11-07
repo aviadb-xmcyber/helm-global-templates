@@ -113,7 +113,7 @@ spec:
             {{- end }}
           {{- end }}
           resources: {{- toYaml (.resources | default $default_values.resources) | nindent 12 }}
-            {{- if .volumeMounts }}
+          {{- if .volumeMounts }}
           volumeMounts:
           {{- if (kindIs "map" .volumeMounts) }}
             {{- range $key, $value := .volumeMounts }}

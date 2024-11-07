@@ -199,14 +199,14 @@ Author: Devops Infra Team
 A helper function to replace placeholders within a string with corresponding global values.
 Returns the original value if no placeholders are found or if the corresponding global value is not found.
 Returns an empty string only if the original value is empty.
-Placeholder format: ^^global.<key>^^
+Placeholder format: {{global.<key>}}
 
 For example if the global values are:
 global:
   key1: value1
   key2: value2
 
-And the input value is: "This is a ^^global.key1^^ example with ^^global.key2^^"
+And the input value is: "This is a {{global.key1}} example with {{global.key}}"
 The output will be: "This is a value1 example with value2"
 
 Parameters:
@@ -230,8 +230,11 @@ Usage:
 {{- else -}}
   {{- range $key, $val := $global }}
     {{- if kindIs "string" $val -}}
-      {{- $placeholder := printf "^^global.%s^^" $key -}}
+      {{- $placeholder := printf "{{ global.%s }}" $key -}}  {{/* Add space around the key to match */}}
       {{- $value = $value | replace $placeholder $val -}}
+      
+      {{- $placeholderNoSpace := printf "{{global.%s}}" $key -}}  {{/* Handle case without spaces */}}
+      {{- $value = $value | replace $placeholderNoSpace $val -}}
     {{- end -}}
   {{- end -}}
   {{- $value -}}
