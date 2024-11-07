@@ -30,7 +30,8 @@ exports:
       annotations: {}
 
     deployment_defaults: *microservice_defaults
-      
+    statefuleset_defaults: *microservice_defaults
+
     service_defaults:
 
     externalsecret_defaults:
@@ -55,8 +56,6 @@ exports:
       pollingInterval: 30
       targetApiVersion: apps/v1
       targetKind: Deployment
-
-    statefuleset_defaults: *microservice_defaults
 
     service_defaults:
 
