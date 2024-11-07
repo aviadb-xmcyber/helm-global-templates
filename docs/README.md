@@ -2,7 +2,7 @@
 
 ## Resources
 
-- [Deployments](https://github.com/XMCyber/helm-global-templates/blob/master/docs/resources/deployment.md)
+- [Deployment](https://github.com/XMCyber/helm-global-templates/blob/master/docs/resources/deployment.md)
 - [Statefulset](https://github.com/XMCyber/helm-global-templates/blob/master/docs/resources/statefulset.md)
 - [Service](https://github.com/XMCyber/helm-global-templates/blob/master/docs/resources/service.md)
 - [Cofigmap](https://github.com/XMCyber/helm-global-templates/blob/master/docs/resources/configmap.md)
