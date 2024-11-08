@@ -43,7 +43,7 @@ deployments:
           - containerPort: 8080
         env:
           - name: INJECTED_WORD
-            value: "This is going to be {{global.key}} here"
+            value: "This is going to be {{ global.key }} here" # Inject the key here
 ```
 
 In the example above, the value of `INJECTED_WORD` will be `This is going to be injected here`.
