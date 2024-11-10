@@ -161,7 +161,7 @@ Author: Devops Infra Team
 {{- if .global }}
   {{- $prefix = .global.nsPrefix | default "" -}}
 {{- end -}}
-{{- $namespace := .namespace | required "namespace is required" -}}
+{{- $namespace := include "helpers.renderGlobalIfExists" (dict "value" (.namespace | required "namespace is required") "global" .global) }}
 {{- if $prefix }}
   {{- printf "%s-%s" $prefix $namespace -}}
 {{- else }}
