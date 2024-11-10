@@ -13,6 +13,7 @@ The syntax for injecting a global value is `{{global.<key>}}`.
 > Note: You can't use dynamic-values in any resource, here is a list of properties and resources that support dynamic-values:
 >
 > - env values in containers (deployments, statefulsets, etc.)
+> - namespaces name in all resources
 > - `clusterexternalsecrets.data[].remoteRef.key`
 > - `clustersecretstores.name`
 > - `clustersecretstores.aws.region`
