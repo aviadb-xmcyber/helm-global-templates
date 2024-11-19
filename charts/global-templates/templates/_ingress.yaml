@@ -25,7 +25,7 @@ spec:
   {{- if or .rules $default_values.rules }}
   rules:
     {{- range .rules }}
-    - host: {{ include "helpers.renderGlobalIfExists" (dict "value" (.host | default $default_values.host) "global" $global_values) }}
+    - host: {{ include "helpers.renderGlobalIfExists" (dict "value" (.host | default $default_values.host) "global" $global_values) | quote }}
       http:
         paths:
           {{- range .http.paths }}
