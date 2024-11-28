@@ -188,10 +188,14 @@ Author: Devops Infra Team
   {{- $parsedData := include "helpers.parseYamlFile" (dict "Files" $files "Filename" .file) }}
 */}}
 {{- define "helpers.parseYamlFile" -}}
+{{- if not (.Files.Get .Filename) -}}
+{{- fail (printf "Error: File %s does not exist" .Filename) -}}
+{{- else -}}
 {{- $fileContents := .Files.Get .Filename | fromYaml | default dict -}}
 {{- range $key, $val := $fileContents }}
 {{ $key }}: |
 {{- $val | trim | nindent 4 }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
