@@ -21,3 +21,8 @@
 
 - [Image Directory](https://github.com/XMCyber/helm-global-templates/blob/master/docs/advanced-usage/image-directory.md)
 - [Dynamic Values](https://github.com/XMCyber/helm-global-templates/blob/master/docs/advanced-usage/dynamic-values.md)
+
+
+## Tests
+
+ - [Unit Tests](https://github.com/XMCyber/helm-global-templates/blob/master/docs/tests/unit-tests.md)

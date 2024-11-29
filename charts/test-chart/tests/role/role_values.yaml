@@ -1,0 +1,8 @@
+roles:
+  app-role:
+    name: app-role
+    namespace: test-namespace
+    rules:
+      - apiGroups: [""]
+        resources: ["pods", "services"]
+        verbs: ["get", "list", "watch"]

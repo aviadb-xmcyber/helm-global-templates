@@ -1,0 +1,8 @@
+configmaps:
+  app-config:
+    name: app-config
+    namespace: test-namespace
+    data:
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      APP_ENV: production

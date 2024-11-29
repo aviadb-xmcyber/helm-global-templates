@@ -1,0 +1,75 @@
+suite: Test namespace template
+templates:
+  - template.yaml
+ 
+tests:
+  - it: should create basic namespace correctly
+    values:
+      - namespace_values.yaml
+    asserts:
+      - equal:
+          path: apiVersion
+          value: v1
+      - equal:
+          path: kind
+          value: Namespace
+      - equal:
+          path: metadata.name
+          value: test-namespace
+      - equal:
+          path: metadata.labels.name
+          value: test-namespace
+
+  - it: should create multiple namespaces
+    set:
+      namespaces:
+        - ns1
+        - ns2
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.name
+          value: ns1
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: ns2
+        documentIndex: 1
+      - equal:
+          path: metadata.labels.name
+          value: ns1
+        documentIndex: 0
+      - equal:
+          path: metadata.labels.name
+          value: ns2
+        documentIndex: 1
+        
+  - it: should prefix namespaces when global prefix is set
+    values:
+      - namespace_values.yaml
+    set:
+      global:
+        nsPrefix: dev
+      namespaces:
+        - test
+        - prod
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.name
+          value: dev-test
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: dev-prod
+        documentIndex: 1
+      - equal:
+          path: metadata.labels.name
+          value: dev-test
+        documentIndex: 0
+      - equal:
+          path: metadata.labels.name
+          value: dev-prod
+        documentIndex: 1

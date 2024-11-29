@@ -18,10 +18,10 @@ Add the following to your Helm chart's Chart.yaml file:
 ```yaml
 dependencies:
   - name: xm-global-templates
-    version: 1.1.3 # Use the latest version
+    version: 1.1.3 # Replace with the desired version
     repository: https://xmcyber.github.io/helm-global-templates/
     import-values:
-      - default
+      - default # Import the default values.yaml file
 ```
 
 ## Usage
@@ -80,3 +80,7 @@ configmaps:
 ## Documentation
 
 For detailed documentation on the available resources and advanced usage, please refer to the [docs folder](docs).
+
+## Tests
+
+For information on how to run tests, please refer to the [tests documentation](docs/tests/unit-tests.md).

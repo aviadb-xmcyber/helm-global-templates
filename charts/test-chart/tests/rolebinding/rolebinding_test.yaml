@@ -1,0 +1,89 @@
+suite: Test rolebinding template
+templates:
+  - template.yaml
+  
+tests:
+  - it: should create basic rolebinding correctly
+    values:
+      - rolebinding_values.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: RoleBinding
+      - equal:
+          path: apiVersion
+          value: rbac.authorization.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: app-rolebinding
+      - equal:
+          path: metadata.namespace
+          value: test-namespace
+
+  - it: should set ServiceAccount subject correctly
+    values:
+      - rolebinding_values.yaml
+    asserts:
+      - equal:
+          path: subjects[0].kind
+          value: ServiceAccount
+      - equal:
+          path: subjects[0].name
+          value: app-sa
+      - equal:
+          path: subjects[0].namespace
+          value: test-namespace
+      - notExists:
+          path: subjects[0].apiGroup
+
+  - it: should set User subject correctly
+    values:
+      - rolebinding_values.yaml
+    set:
+      rolebindings.app-rolebinding.subjects:
+        - kind: User
+          name: john@example.com
+          namespace: test-namespace
+    asserts:
+      - equal:
+          path: subjects[0].kind
+          value: User
+      - equal:
+          path: subjects[0].apiGroup
+          value: rbac.authorization.k8s.io
+      - equal:
+          path: subjects[0].name
+          value: john@example.com
+
+  - it: should set roleRef correctly
+    values:
+      - rolebinding_values.yaml
+    asserts:
+      - equal:
+          path: roleRef.kind
+          value: Role
+      - equal:
+          path: roleRef.name
+          value: app-role
+      - equal:
+          path: roleRef.apiGroup
+          value: rbac.authorization.k8s.io
+
+  - it: should set multiple subjects
+    values:
+      - rolebinding_values.yaml
+    set:
+      rolebindings.app-rolebinding.subjects:
+        - kind: ServiceAccount
+          name: app-sa
+          namespace: test-namespace
+        - kind: Group
+          name: developers
+          namespace: test-namespace
+    asserts:
+      - lengthEqual:
+          path: subjects
+          count: 2
+      - equal:
+          path: subjects[1].kind
+          value: Group

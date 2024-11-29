@@ -1,0 +1,24 @@
+name: Helm Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  helm-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Install unittest plugin
+        run: |
+          helm plugin install https://github.com/helm-unittest/helm-unittest.git
+
+      - name: Run tests
+        run: |
+          helm unittest -f "tests/*/*_test.yaml" charts/test-chart

@@ -1,0 +1,11 @@
+rolebindings:
+  app-rolebinding:
+    name: app-rolebinding
+    namespace: test-namespace
+    subjects:
+      - kind: ServiceAccount
+        name: app-sa
+        namespace: test-namespace
+    roleRef:
+      kind: Role
+      name: app-role

@@ -1,0 +1,93 @@
+suite: Test configmap template
+templates:
+  - template.yaml
+tests:
+  - it: should create basic configmap correctly
+    values:
+      - configmap_values.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: ConfigMap
+      - equal:
+          path: apiVersion
+          value: v1
+      - equal:
+          path: metadata.name
+          value: app-config
+      - equal:
+          path: metadata.namespace
+          value: test-namespace
+
+  - it: should set inline data correctly
+    values:
+      - configmap_values.yaml
+    asserts:
+      - equal:
+          path: data.DB_HOST
+          value: localhost
+      - equal:
+          path: data.DB_PORT
+          value: 5432
+      - equal:
+          path: data.APP_ENV
+          value: production
+
+  - it: should set annotations correctly
+    values:
+      - configmap_values.yaml
+    set:
+      configmaps.app-config.annotations:
+        custom.annotation/test: "true"
+    asserts:
+      - equal:
+          path: metadata.annotations["custom.annotation/test"]
+          value: "true"
+
+  - it: should set labels correctly
+    values:
+      - configmap_values.yaml
+    set:
+      configmaps.app-config.labels:
+        custom-label: test-value
+    asserts:
+      - equal:
+          path: metadata.labels["custom-label"]
+          value: test-value
+
+  - it: should create configmap with file content
+    set:
+      configmaps:
+        - name: app-config
+          namespace: test-namespace
+          file_content:
+            config.yaml: |
+              database:
+                host: localhost
+                port: 5432
+    asserts:
+      - equal:
+          path: data["config.yaml"]
+          value: |-
+              database:
+                host: localhost
+                port: 5432
+
+  - it: should create multiple configmaps for different namespaces
+    set:
+      configmaps:
+        - name: app-config
+          namespaces:
+            - ns1
+            - ns2
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.namespace
+          value: ns1
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: ns2
+        documentIndex: 1
