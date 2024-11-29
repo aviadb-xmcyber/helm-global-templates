@@ -1,0 +1,11 @@
+services:
+  api:
+    name: api-service
+    namespace: test-namespace
+    type: ClusterIP
+    ports:
+      - port: 80
+        targetPort: 8080
+        protocol: TCP
+    sessionAffinity: None
+    clusterIP: None

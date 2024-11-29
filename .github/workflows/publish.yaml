@@ -26,6 +26,9 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Delete the test-chart directory 
+        run: rm -rf charts/test-chart
+
       - name: Add repositories
         run: |
           for dir in $(ls -d charts/*/); do

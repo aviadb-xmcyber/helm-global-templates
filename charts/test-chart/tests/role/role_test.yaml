@@ -1,0 +1,73 @@
+suite: Test role template
+templates:
+  - template.yaml
+  
+tests:
+  - it: should create basic role correctly
+    values:
+      - role_values.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: Role
+      - equal:
+          path: apiVersion
+          value: rbac.authorization.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: app-role
+      - equal:
+          path: metadata.namespace
+          value: test-namespace
+
+  - it: should set rules correctly
+    values:
+      - role_values.yaml
+    set:
+      roles.app-role.rules[0]:
+        apiGroups: [""]
+        resources: ["pods"]
+        verbs: ["get", "list"]
+    asserts:
+      - equal:
+          path: rules[0].apiGroups
+          value: [""]
+      - equal:
+          path: rules[0].resources
+          value: ["pods"]
+      - equal:
+          path: rules[0].verbs
+          value: ["get", "list"]
+
+  - it: should set multiple rules
+    values:
+      - role_values.yaml
+    set:
+      roles.app-role.rules:
+        - apiGroups: [""]
+          resources: ["pods"]
+          verbs: ["get", "list"]
+        - apiGroups: ["apps"]
+          resources: ["deployments"]
+          verbs: ["watch", "list"]
+    asserts:
+      - lengthEqual:
+          path: rules
+          count: 2
+      - equal:
+          path: rules[1].apiGroups
+          value: ["apps"]
+      - equal:
+          path: rules[1].resources
+          value: ["deployments"]
+
+  - it: should set annotations correctly
+    values:
+      - role_values.yaml
+    set:
+      roles.app-role.annotations:
+        test-annotation: test-value
+    asserts:
+      - equal:
+          path: metadata.annotations["test-annotation"]
+          value: test-value

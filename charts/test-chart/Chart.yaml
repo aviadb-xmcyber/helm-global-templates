@@ -1,0 +1,12 @@
+apiVersion: v2
+name: test-chart
+version: 0.1.0
+dependencies:
+  - name: global-templates
+    version: "*"
+    repository: file://../global-templates
+    import-values:
+      - defaults
+  - name: common
+    version: 2.6.0
+    repository: https://charts.bitnami.com/bitnami
