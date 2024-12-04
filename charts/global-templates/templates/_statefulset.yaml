@@ -192,7 +192,20 @@ spec:
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .tolerations "context" $) | nindent 8 }}
+      tolerations: 
+      {{- range .tolerations }}
+        - key: {{ include "helpers.renderGlobalIfExists" (dict "value" (required "Key is required for each toleration" .key | quote) "global" $global_values) }}     
+          {{- if .operator }}
+          operator: {{ .operator | quote }}
+          {{- end }}
+          value: {{ include "helpers.renderGlobalIfExists" (dict "value" (required "Value is required for each toleration" .value | quote) "global" $global_values) }}     
+          {{- if .effect }}  
+          effect: {{ .effect | quote }}
+          {{- end }}
+          {{- if .tolerationSeconds }}
+          tolerationSeconds: {{ .tolerationSeconds }}
+          {{- end }}
+      {{- end }}
       {{- end }}
       {{- if .priorityClassName }}
       priorityClassName: {{ .priorityClassName | quote }}
