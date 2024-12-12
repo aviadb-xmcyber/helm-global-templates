@@ -140,3 +140,17 @@ tests:
       - equal:
           path: "spec.template.spec.containers[0].env[3].value"
           value: I love {{ global.not-exists }} values! 
+
+  - it: should set envFrom correctly
+    values:
+      - deployment_values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[0].configMapRef.name
+          value: app-config
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[1].secretRef.name
+          value: app-secret
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[2].configMapRef.name
+          value: app-config-rendered

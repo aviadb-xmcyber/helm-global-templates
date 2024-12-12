@@ -1,3 +1,6 @@
+global:
+  render_key: rendered
+
 deployments:
   api:
     name: api
@@ -38,10 +41,13 @@ deployments:
         env:
           - name: DB_HOST
             value: localhost
-        configMapRef:
-          - app-config
-        secretRef:
-          - app-secrets
+        envFrom:
+          - configMapRef:
+              name: app-config
+          - secretRef:
+              name: app-secret
+          - configMapRef:
+              name: app-config-{{ global.render_key }}
         volumeMounts:
           - name: config-volume
             mountPath: /config
