@@ -13,8 +13,8 @@
 | `secretStoreRef`                      | map          | Yes      | A reference to the secret store. Must include `name` and can optionally include `kind`.               |
 | `secretStoreRef.name`                 | string       | Yes      | The name of the secret store.                                                                         |
 | `secretStoreRef.kind`                 | string       | No       | The kind of the secret store. Defaults to `SecretStore`.                                              |
-| `target`                              | map          | No       | Configuration for the target secret that will be created from the ExternalSecret.                     |
-| `target.name`                         | string       | No       | The name of the target secret. Defaults to the name of the ExternalSecret.                            |
+| `target`                              | map          | Yes      | Configuration for the target secret that will be created from the ExternalSecret.                     |
+| `target.name`                         | string       | Yes      | The name of the target secret. Defaults to the name of the ExternalSecret.                            |
 | `target.creationPolicy`               | string       | No       | The creation policy for the target secret. Defaults to `Owner`.                                       |
 | `target.template`                     | map          | No       | A template for the target secret.                                                                     |
 | `data`                                | List of maps | Yes      | A list of data entries for the ExternalSecret. Each entry specifies a `secretKey` and a `remoteRef`.  |
@@ -26,10 +26,9 @@
 | `data[].remoteRef.decodingStrategy`   | string       | No       | The strategy for decoding the data.                                                                   |
 | `data[].remoteRef.conversionStrategy` | string       | No       | The strategy for converting the data. Defaults to `Default`.                                          |
 | `data[].remoteRef.metadataPolicy`     | string       | No       | The policy for handling metadata. Defaults to `None`.                                                 |
-| `dataFrom`                            | List of maps | No       | A list of keys from which data will be sourced for the ExternalSecret.                                |
-| `dataFrom[].key`                      | string       | Yes      | The key in the remote secret.                                                                         |
-| `dataFrom[].version`                  | string       | No       | The version of the key in the remote secret.                                                          |
-| `dataFrom[].property`                 | string       | No       | The property to extract from the remote secret key.                                                   |
+| `dataFrom`                            | List of maps | No       | A list of data entries for the ExternalSecret. Each entry specifies an `extract` configuration.       |
+| `dataFrom[].extract`                  | map          | No       | Extract all keys from the remote secret.                                                              |
+| `dataFrom[].extract.key`              | string       | Yes      | The key in the remote secret.                                                                         |
 
 ## Example of a Simple ExternalSecret
 
@@ -55,5 +54,6 @@ externalsecrets:
           version: "1"
           property: propertyName
     dataFrom:
-      - key: another-remote-key
+      - extract:
+          key: another-remote-key
 ```
