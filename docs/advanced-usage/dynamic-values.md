@@ -8,7 +8,7 @@ We solved this problem by using a `dynamic-values`, basically a utilily function
 
 ### Usage
 
-The syntax for injecting a global value is `{{global.<key>}}`.
+The syntax for injecting a global value is `{{ global.path_to_value }}`, you can also use nested values like `{{ global.path.to.value }}`.
 
 > Note: You can't use dynamic-values in any resource, here is a list of properties and resources that support dynamic-values:
 >
@@ -21,6 +21,7 @@ The syntax for injecting a global value is `{{global.<key>}}`.
 > - `externalsecrets.data[].remoteRef.key`
 > - `ingresses.rules[].host`
 > - `scaledobjects.triggers[].metadata{}`
+> - `configmaps.data`
 >
 > If you want to use dynamic-values in other resources, please open an issue and we will add support for it.
 
@@ -30,6 +31,9 @@ The syntax for injecting a global value is `{{global.<key>}}`.
 # Dynamic values has to be defined in the global scope
 global:
   key: injected
+  db:
+    host: db.example.com
+    port: 5432
 
 deployments:
   - name: app
@@ -45,6 +49,10 @@ deployments:
         env:
           - name: INJECTED_WORD
             value: "This is going to be {{ global.key }} here" # Inject the key here
+          - name: DB_HOST
+            value: "{{ global.db.host }}" # You can also use nested values
+          - name: DB_PORT 
+            value: "{{ global.db.port }}"
 ```
 
 In the example above, the value of `INJECTED_WORD` will be `This is going to be injected here`.
