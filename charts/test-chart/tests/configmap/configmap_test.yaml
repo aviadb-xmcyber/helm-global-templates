@@ -69,9 +69,9 @@ tests:
       - equal:
           path: data["config.yaml"]
           value: |-
-              database:
-                host: localhost
-                port: 5432
+            database:
+              host: localhost
+              port: 5432
 
   - it: should create multiple configmaps for different namespaces
     set:
@@ -91,3 +91,38 @@ tests:
           path: metadata.namespace
           value: ns2
         documentIndex: 1
+
+  - it: should create dynamic configmap with global values
+    set:
+      global:
+        key: data
+        nested:
+          list:
+            - data
+            - data2
+          key:
+            data: value2
+          number: 22
+
+      configmaps:
+        app-config:
+          name: app-config
+          namespace: test-namespace
+          data:
+            key: "{{ global.key }}"
+            nested_list: "list-{{ global.nested.list }}"
+            nested_key_data: "{{ global.nested.key.data }}"
+            nested_number: "{{ global.nested.number }}"
+    asserts:
+      - equal:
+          path: data.key
+          value: data
+      - equal:
+          path: data.nested_list
+          value: "list-{{ global.nested.list }}"
+      - equal:
+          path: data.nested_key_data
+          value: value2
+      - equal:
+          path: data.nested_number
+          value: 22

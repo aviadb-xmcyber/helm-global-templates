@@ -199,28 +199,32 @@ Author: Devops Infra Team
 {{- end -}}
 {{- end -}}
 
-{{/*
+{{- /*
 A helper function to replace placeholders within a string with corresponding global values.
-Returns the original value if no placeholders are found or if the corresponding global value is not found.
-Returns an empty string only if the original value is empty.
-Placeholder format: {{global.<key>}}
+Supports nested values using dot notation.
+Returns the original value if:
+- No placeholders are found
+- The corresponding global value path is not found
+- The input is a number
 
-For example if the global values are:
+Placeholder format: {{ global.path.to.value_name }}
+
+Example global values:
 global:
-  key1: value1
-  key2: value2
+  db:
+    host: localhost
+    port: 5432
+  api:
+    key: secret
 
-And the input value is: "This is a {{global.key1}} example with {{global.key}}"
-The output will be: "This is a value1 example with value2"
+Input: "Connect to {{global.db.host}}:{{ global.db.port }} using {{global.api.key}}"
+Output: "Connect to localhost:5432 using secret"
 
 Parameters:
 - dict:
-  - "value": The main value to evaluate.
-  - "global": The global values object.
-
-Usage:
-{{ include "helpers.renderGlobalIfExists" (dict "value" .yourValue "global" .Values.global) }}
-*/}}
+  - "value": The main value to evaluate
+  - "global": The global values object
+*/ -}}
 {{- define "helpers.renderGlobalIfExists" -}}
 {{- $value := .value | default "" -}}
 {{- $global := .global | default dict -}}
@@ -232,15 +236,35 @@ Usage:
 {{- else if eq (len $global) 0 -}}
   {{- $value -}}
 {{- else -}}
-  {{- range $key, $val := $global }}
-    {{- if kindIs "string" $val -}}
-      {{- $placeholder := printf "{{ global.%s }}" $key -}}  {{/* Add space around the key to match */}}
-      {{- $value = $value | replace $placeholder $val -}}
-      
-      {{- $placeholderNoSpace := printf "{{global.%s}}" $key -}}  {{/* Handle case without spaces */}}
-      {{- $value = $value | replace $placeholderNoSpace $val -}}
+  {{- /* Find all placeholders matching {{global.path.to.value}} pattern */ -}}
+  {{- $regex := "\\{{2}\\s*global\\.([\\w\\-\\.\\_]+)\\s*\\}{2}" -}}
+  {{- $result := $value -}}
+  
+  {{- /* Process each placeholder found */ -}}
+  {{- range $placeholder := regexFindAll $regex $value -1 -}}
+    {{- /* Extract the path after 'global.' */ -}}
+    {{- $path := regexFind "[\\w\\-\\.\\_]+" (regexFind "global\\.([\\w\\-\\.\\_]+)" $placeholder) -}}
+    {{- $path = trimPrefix "global." $path -}}
+    
+    {{- /* Split path into parts and traverse the global object */ -}}
+    {{- $current := $global -}}
+    {{- $valid := true -}}
+    {{- range $part := splitList "." $path -}}
+      {{- if hasKey $current $part -}}
+        {{- $current = index $current $part -}}
+      {{- else -}}
+        {{- $valid = false -}}
+      {{- end -}}
+    {{- end -}}
+    
+    {{- /* Replace placeholder with value if path is valid and value is a string */ -}}
+    {{- if and $valid (kindIs "string" $current) -}}
+      {{- $result = replace $placeholder $current $result -}}
+    {{- else if and $valid (or (kindIs "int" $current) (kindIs "float64" $current)) -}}
+      {{- $result = replace $placeholder (printf "%v" $current) $result -}}
     {{- end -}}
   {{- end -}}
-  {{- $value -}}
+  
+  {{- $result -}}
 {{- end -}}
 {{- end -}}
