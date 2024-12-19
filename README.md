@@ -17,8 +17,8 @@ Add the following to your Helm chart's Chart.yaml file:
 
 ```yaml
 dependencies:
-  - name: xm-global-templates
-    version: 1.1.3 # Replace with the desired version
+  - name: global-templates
+    version: 1.2.0 # Replace with the desired version
     repository: https://xmcyber.github.io/helm-global-templates/
     import-values:
       - default # Import the default values.yaml file
