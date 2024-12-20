@@ -11,3 +11,4 @@
 {{ include "global-templates.rolebinding" (dict "rolebindings" .Values.rolebindings "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.role" (dict "roles" .Values.roles "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.serviceaccount" (dict "serviceaccounts" .Values.serviceaccounts "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
+{{ include "global-templates.sealedsecret" (dict "sealedsecrets" .Values.sealedsecrets "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
