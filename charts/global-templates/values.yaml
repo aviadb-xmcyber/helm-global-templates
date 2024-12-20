@@ -62,6 +62,8 @@ exports:
     ingress_defaults:
       ingressClassName: ingress-nginx-internal
       path: '/'
+      
+    sealedsecrets_defaults:
 
     roles_defaults:
     rolebinding_defaults:
