@@ -18,10 +18,10 @@ Add the following to your Helm chart's Chart.yaml file:
 ```yaml
 dependencies:
   - name: global-templates
-    version: 1.2.0 # Replace with the desired version
+    version: 1.2.3 # Replace with the desired version
     repository: https://xmcyber.github.io/helm-global-templates/
     import-values:
-      - default # Import the default values.yaml file
+      - defaults # Import the default values.yaml file
 ```
 
 ## Usage
