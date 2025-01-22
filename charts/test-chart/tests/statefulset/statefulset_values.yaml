@@ -1,0 +1,103 @@
+global:
+  render_key: rendered
+
+statefulsets:
+  my-statefulset:
+    name: my-statefulset
+    namespace: test-namespace
+    replicas: 2
+    serviceName: "my-statefulset"  # Required for StatefulSets
+    revisionHistoryLimit: 5
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 0  # StatefulSets don't have maxSurge, just maxUnavailable
+    initContainers:
+      - name: init-db
+        image:
+          registry: docker.io
+          repository: busybox
+          tag: 1.0.0
+        command: 
+          - /bin/sh
+          - -c
+          - "echo 'db initialized'"
+        volumeMounts:
+          - name: config-volume
+            mountPath: /config
+    imagePullSecrets:
+      - name: my-secret
+    containers:
+      api-container:
+        name: my-app-container  # Change to fit the StatefulSet context
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+        image:
+          registry: docker.io
+          repository: busybox
+          tag: 1.0.0
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        env:
+          - name: DB_HOST
+            value: localhost
+        envFrom:
+          - configMapRef:
+              name: app-config
+          - secretRef:
+              name: app-secret
+          - configMapRef:
+              name: app-config-{{ global.render_key }}
+        volumeMounts:
+          - name: config-volume
+            mountPath: /config
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+    volumes:
+      config-volume:
+        name: config-volume
+        configMap:
+          name: app-config
+          items:
+            - key: config.yaml
+              path: config.yaml
+    securityContext:
+      runAsNonRoot: true
+    serviceAccountName: api-sa
+    nodeSelector:
+      disktype: ssd
+    tolerations:
+      - key: "key1"
+        operator: "Equal"
+        value: "value1"
+        effect: "NoSchedule"
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/e2e-az-name
+                  operator: In
+                  values:
+                    - e2e-az1
+                    - e2e-az2
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Delete  # Options: "Delete" or "Retain"
+      whenScaled: Retain    # Options: "Delete" or "Retain"
