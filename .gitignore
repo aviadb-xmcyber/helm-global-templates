@@ -1,6 +1,5 @@
 /tmp
 .debug
 .DS_Store
-*.tgz
+*.tar.gz
 **/Chart.lock
-
