@@ -19,7 +19,7 @@ statefulsets:
           repository: busybox
           tag: 1.0.0
         command: 
-          - /bin/sh
+          - "/bin/sh"
           - -c
           - "echo 'db initialized'"
         volumeMounts:
@@ -98,6 +98,15 @@ statefulsets:
                   values:
                     - e2e-az1
                     - e2e-az2
+    volumeClaimTemplates:
+      - metadata:
+          name: my-pvc  # This name is referenced in the volumes section
+        spec:
+          accessModes:
+            - ReadWriteOnce  # Change as needed
+          resources:
+            requests:
+              storage: 1Gi 
     persistentVolumeClaimRetentionPolicy:
       whenDeleted: Delete  # Options: "Delete" or "Retain"
       whenScaled: Retain    # Options: "Delete" or "Retain"

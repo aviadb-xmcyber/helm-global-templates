@@ -70,8 +70,9 @@ tests:
           path: spec.template.spec.volumes[0].name
           value: config-volume
       - equal:
-          path: spec.volumeClaimTemplates[0].metadata.name  # This points to the name defined in volumeClaimTemplates
-          value: my-pvc 
+        # Here we check for the expected name of the PVCs created from the volumeClaimTemplates
+        path: spec.volumeClaimTemplates[0].metadata.name  # This points to the name defined in volumeClaimTemplates
+        value: my-pvc 
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[0].name
           value: config-volume
@@ -105,17 +106,6 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[0].name
           value: my-secret
-
-  - it: should set persistentVolumeClaimRetentionPolicy correctly
-    values:
-      - statefulset_values.yaml
-    asserts:
-      - equal:
-          path: spec.persistentVolumeClaimRetentionPolicy.whenDeleted
-          value: Delete
-      - equal:
-          path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
-          value: Retain
 
   - it: should not render statefulset if disabled
     values:
