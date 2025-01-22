@@ -6,12 +6,12 @@ statefulsets:
     name: my-statefulset
     namespace: test-namespace
     replicas: 2
-    serviceName: "my-statefulset"  # Required for StatefulSets
+    serviceName: "my-statefulset"
     revisionHistoryLimit: 5
     strategy:
       type: RollingUpdate
       rollingUpdate:
-        maxUnavailable: 0  # StatefulSets don't have maxSurge, just maxUnavailable
+        maxUnavailable: 0
     initContainers:
       - name: init-db
         image:
@@ -29,7 +29,7 @@ statefulsets:
       - name: my-secret
     containers:
       api-container:
-        name: my-app-container  # Change to fit the StatefulSet context
+        name: my-app-container
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
@@ -100,13 +100,13 @@ statefulsets:
                     - e2e-az2
     volumeClaimTemplates:
       - metadata:
-          name: my-pvc  # This name is referenced in the volumes section
+          name: my-pvc
         spec:
           accessModes:
-            - ReadWriteOnce  # Change as needed
+            - ReadWriteOnce
           resources:
             requests:
               storage: 1Gi 
     persistentVolumeClaimRetentionPolicy:
-      whenDeleted: Delete  # Options: "Delete" or "Retain"
-      whenScaled: Retain    # Options: "Delete" or "Retain"
+      whenDeleted: Delete
+      whenScaled: Retain
