@@ -1,3 +1,5 @@
 /tmp
 .debug
 .DS_Store
+*.tar.gz
+**/Chart.lock

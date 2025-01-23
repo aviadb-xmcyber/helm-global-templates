@@ -236,6 +236,10 @@ spec:
   volumeClaimTemplates:
   {{- toYaml .volumeClaimTemplates | nindent 4 }}
   {{- end}}
+  {{- if .persistentVolumeClaimRetentionPolicy }}
+  persistentVolumeClaimRetentionPolicy:
+  {{- toYaml .persistentVolumeClaimRetentionPolicy | nindent 4 }}
+  {{- end}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
