@@ -31,6 +31,9 @@
 | `containers[].imagePullPolicy`          | string              | No       | The pull policy for the image (e.g., `Always`, `IfNotPresent`).            |
 | `containers[].ports`                    | List of maps        | No       | Ports exposed by the container.                                            |
 | `containers[].ports[].containerPort`    | integer             | Yes      | The port number.                                                           |
+| `containers[].livenessProbe`            | object              | No       | Liveness probe settings for the container.                                 |
+| `containers[].readinessProbe`           | object              | No       | Readiness probe settings for the container.                                |
+| `containers[].startupProbe`             | object              | No       | Startup probe settings for the container.                                  |
 | `containers[].env`                      | List of maps        | No       | Environment variables for the container.                                   |
 | `containers[].envFrom`                  | List of maps        | No       | Environment sources for the container (e.g., `configMapRef`, `secretRef`). |
 | `containers[].volumeMounts`             | List of maps or map | No       | Volumes to be mounted into the container.                                  |
