@@ -1,0 +1,38 @@
+suite: Test certificate template
+templates:
+  - template.yaml
+
+tests:
+  - it: should create basic certificate correctly
+    values:
+      - certificate_values.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: Certificate
+      - equal:
+          path: apiVersion
+          value: cert-manager.io/v1
+      - equal:
+          path: metadata.name
+          value: test-certificate
+      - equal:
+          path: metadata.namespace
+          value: test-namespace
+      - equal:
+          path: spec.secretName
+          value: test-secret
+      - equal:
+          path: spec.issuerRef.name
+          value: test-issuer
+
+  - it: should fail if issuerRef is missing
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: "issuerRef must be provided for Certificate"
+    
