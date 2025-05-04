@@ -1,0 +1,8 @@
+certificates:
+  test-certificate:
+    name: test-certificate
+    namespace: test-namespace
+    secretName: test-secret
+    issuerRef:
+      name: test-issuer
+      kind: Issuer

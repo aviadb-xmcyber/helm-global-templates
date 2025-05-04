@@ -1,0 +1,8 @@
+issuers:
+  test-issuer:
+    name: test-issuer
+    namespace: test-namespace
+    ca:
+      secretName: test-secret
+      duration: 24h
+      renewBefore: 12h
