@@ -11,10 +11,10 @@ Author: Devops Infra Team
 {{- range .certificates }}
 {{- if not .disabled }}
 {{- $certificate := . }}
-{{- if not (hasKey . "secretName") }}
+{{- if not $certificate.secretName }}
 {{- fail "secretName must be provided for Certificate" }}
 {{- end }}
-{{- if not (hasKey . "issuerRef") }}
+{{- if not $certificate.issuerRef }}
 {{- fail "issuerRef must be provided for Certificate" }}
 {{- end }}
 {{- $namespace := .namespace | default "" }}
