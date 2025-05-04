@@ -35,4 +35,158 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "issuerRef must be provided for Certificate"
-    
+          
+  - it: should fail if secretName is missing
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          issuerRef:
+            name: test-issuer
+    asserts:
+      - failedTemplate:
+          errorMessage: "secretName must be provided for Certificate"
+          
+  - it: should set duration and renewBefore correctly
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+          duration: "8760h"
+          renewBefore: "720h"
+    asserts:
+      - equal:
+          path: spec.duration
+          value: "8760h"
+      - equal:
+          path: spec.renewBefore
+          value: "720h"
+          
+  - it: should use default values for duration and renewBefore if not specified
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+      certificate_defaults:
+        duration: "4380h"
+        renewBefore: "360h"
+    asserts:
+      - equal:
+          path: spec.duration
+          value: "4380h"
+      - equal:
+          path: spec.renewBefore
+          value: "360h"
+          
+  - it: should use hardcoded defaults if no values are specified
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+    asserts:
+      - equal:
+          path: spec.duration
+          value: "2160h"
+      - equal:
+          path: spec.renewBefore
+          value: "720h"
+          
+  - it: should set DNS names correctly
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+          dnsNames:
+            - example.com
+            - www.example.com
+    asserts:
+      - equal:
+          path: spec.dnsNames[0]
+          value: example.com
+      - equal:
+          path: spec.dnsNames[1]
+          value: www.example.com
+                
+  - it: should set issuerRef kind and group correctly
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+            kind: ClusterIssuer
+            group: cert-manager.io
+    asserts:
+      - equal:
+          path: spec.issuerRef.kind
+          value: ClusterIssuer
+      - equal:
+          path: spec.issuerRef.group
+          value: cert-manager.io
+          
+  - it: should set privateKey configuration correctly
+    set:
+      certificates:
+        - name: test-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+          privateKey:
+            algorithm: ECDSA
+            encoding: PKCS8
+            size: 256
+            rotationPolicy: Always
+    asserts:
+      - equal:
+          path: spec.privateKey.algorithm
+          value: ECDSA
+      - equal:
+          path: spec.privateKey.encoding
+          value: PKCS8
+      - equal:
+          path: spec.privateKey.size
+          value: 256
+      - equal:
+          path: spec.privateKey.rotationPolicy
+          value: Always
+          
+  - it: should respect disabled flag
+    set:
+      certificates:
+        - name: disabled-certificate
+          disabled: true
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+    asserts:
+      - hasDocuments:
+          count: 0
+                                        
+  - it: should set commonName correctly
+    set:
+      certificates:
+        - name: common-name-certificate
+          namespace: test-namespace
+          secretName: test-secret
+          issuerRef:
+            name: test-issuer
+          commonName: example.com
+    asserts:
+      - equal:
+          path: spec.commonName
+          value: example.com
