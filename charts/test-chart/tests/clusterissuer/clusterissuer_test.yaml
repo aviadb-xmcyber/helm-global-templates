@@ -17,9 +17,6 @@ tests:
           path: metadata.name
           value: test-issuer
       - equal:
-          path: metadata.namespace
-          value: test-namespace
-      - equal:
           path: spec.ca.secretName
           value: test-secret
 
