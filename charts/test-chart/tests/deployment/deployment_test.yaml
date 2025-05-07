@@ -260,3 +260,19 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.initialDelaySeconds
           value: 5
+
+  - it: should render global values correctly to image pull policy
+    values:
+      - deployment_values.yaml
+    set:
+      global.imagePullPolicy: Never
+      deployments.api.containers.api-container.imagePullPolicy: "{{ global.imagePullPolicy }}"
+      deployments.api.initContainers.init-db.imagePullPolicy: "{{ global.imagePullPolicy }}"
+    
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: Never
+      - equal:
+          path: spec.template.spec.initContainers[0].imagePullPolicy
+          value: Never
