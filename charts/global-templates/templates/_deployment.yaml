@@ -78,16 +78,22 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- if .volumeMounts }}
           volumeMounts:
-            {{- range .volumeMounts }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-              {{- if .subPath }}
-              subPath: {{ .subPath }}
+            {{- if (kindIs "map" .volumeMounts) }}
+            {{- range $key, $value := .volumeMounts }}
+            - name: {{ include "helpers.renderGlobalIfExists" (dict "value" ($value.name) "global" $global_values) }}
+              mountPath: {{ include "helpers.renderGlobalIfExists" (dict "value" ($value.mountPath) "global" $global_values) }}
+              {{- if $value.subPath }}
+              subPath: {{ include "helpers.renderGlobalIfExists" (dict "value" ($value.subPath) "global" $global_values) }}
               {{- end }}
-              {{- if .readOnly }}
-              readOnly: {{ .readOnly }}
+              {{- if $value.readOnly }}
+              readOnly: {{ $value.readOnly }}
               {{- end }}
+            {{- end }}
+            {{- else }}
+              {{- include "helpers.renderGlobalRecursive" (dict "value" .volumeMounts "global" $global_values) | nindent 12 }}
+            {{- end }}
             {{- end }}
           {{- if .resources }}
           resources: {{ .resources | toYaml | nindent 12 }}
@@ -148,7 +154,7 @@ spec:
               {{- end }}
             {{- end }}
           {{- else }}
-            {{- toYaml .volumeMounts | nindent 12 }}
+            {{- include "helpers.renderGlobalRecursive" (dict "value" .volumeMounts "global" $global_values) | nindent 12 }}
           {{- end }}
           {{- end }}
           {{- if .ports }}
@@ -193,7 +199,7 @@ spec:
           {{- end }}
         {{- end }}
       {{- else }}
-        {{- toYaml .volumes | nindent 8 }}
+        {{- include "helpers.renderGlobalRecursive" (dict "value" .volumes "global" $global_values) | nindent 8 }}
       {{- end }}
       {{- end }}
       {{- if .hostAliases }}
