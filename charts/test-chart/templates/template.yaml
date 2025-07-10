@@ -13,6 +13,7 @@
 {{ include "global-templates.serviceaccount" (dict "serviceaccounts" .Values.serviceaccounts "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.sealedsecret" (dict "sealedsecrets" .Values.sealedsecrets "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.pdb" (dict "pdbs" .Values.pdbs "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
+{{ include "global-templates.hpa" (dict "hpas" .Values.hpas "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.certificate" (dict "certificates" .Values.certificates "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.clusterissuer" (dict "clusterissuers" .Values.clusterissuers "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}
 {{ include "global-templates.issuer" (dict "issuers" .Values.issuers "Chart" .Chart "Release" .Release "Capabilities" .Capabilities "Files" .Files "Template" .Template "Values" .Values) }}

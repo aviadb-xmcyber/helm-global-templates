@@ -1,0 +1,87 @@
+suite: Test HPA template
+templates:
+  - template.yaml
+
+tests:
+  - it: should create basic hpa correctly
+    values:
+      - hpa_values.yaml
+    asserts:
+      - equal:
+          path: kind
+          value: HorizontalPodAutoscaler
+      - equal:
+          path: apiVersion
+          value: autoscaling/v2
+      - equal:
+          path: metadata.name
+          value: app-hpa
+      - equal:
+          path: metadata.namespace
+          value: test-namespace
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: target
+      - equal:
+          path: spec.minReplicas
+          value: 1
+      - equal:
+          path: spec.maxReplicas
+          value: 5
+
+  - it: should set annotations correctly
+    values:
+      - hpa_values.yaml
+    set:
+      hpas.app-hpa.annotations:
+        test-annotation: test-value
+    asserts:
+      - equal:
+          path: metadata.annotations["test-annotation"]
+          value: test-value
+
+  - it: should set labels correctly
+    values:
+      - hpa_values.yaml
+    set:
+      hpas.app-hpa.labels:
+        custom-label: test-value
+    asserts:
+      - equal:
+          path: metadata.labels["custom-label"]
+          value: test-value
+  
+  - it: should not render hpa if disabled
+    values:
+      - hpa_values.yaml
+    set:
+      hpas.app-hpa.disabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+  
+  - it: should set metrics correctly
+    values:
+      - hpa_values.yaml
+    asserts:
+      - equal:
+          path: spec.metrics[0].type
+          value: Resource
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+      - equal:
+          path: spec.metrics[1].type
+          value: Resource
+      - equal:
+          path: spec.metrics[1].resource.name
+          value: memory
+      - equal:
+          path: spec.metrics[2].type
+          value: Pods
+      - equal:
+          path: spec.metrics[2].pods.metricName
+          value: custom-metric
+      - equal:
+          path: spec.metrics[2].pods.targetAverageValue
+          value: 5
