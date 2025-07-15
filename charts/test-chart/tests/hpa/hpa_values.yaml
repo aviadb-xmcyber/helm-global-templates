@@ -1,0 +1,14 @@
+hpas:
+  app-hpa:
+    name: app-hpa
+    namespace: test-namespace
+    targetName: target
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70
+    extraMetrics:
+      - type: Pods
+        pods:
+          metricName: custom-metric
+          targetAverageValue: 5
