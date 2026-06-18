@@ -252,10 +252,14 @@ Parameters:
   - "global": The global values object
 */ -}}
 {{- define "helpers.renderGlobalIfExists" -}}
-{{- $value := .value | default "" -}}
+{{- /* use a nil check, not `default ""`, so a boolean false isn't coerced to "" */ -}}
+{{- $value := "" -}}
+{{- if not (kindIs "invalid" .value) -}}
+  {{- $value = .value -}}
+{{- end -}}
 {{- $global := .global | default dict -}}
 
-{{- if or (kindIs "int" $value) (kindIs "float64" $value) -}}
+{{- if or (kindIs "int" $value) (kindIs "float64" $value) (kindIs "bool" $value) -}}
   {{- $value -}}
 {{- else if and (kindIs "string" $value) (eq $value "") -}}
   {{- "" -}}
